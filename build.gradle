@@ -1,0 +1,139 @@
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+	id 'signing'
+}
+
+static isSnapshotRelease(versionString) {
+	versionString.endsWith('SNAPSHOT')
+}
+
+ext {
+	moduleName = 'net.jqwik.testcontainers'
+	junitPlatformVersion = '1.7.0'
+	opentest4jVersion = '1.2.0'
+	assertJVersion = '3.15.0'
+	mockitoVersion = '3.3.3'
+	jqwikVersion = '1.3.7-SNAPSHOT'
+	jqwikTestscontainersVersion = '0.5.0-SNAPSHOT'
+	isSnapshotRelease = isSnapshotRelease(jqwikTestscontainersVersion)
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+group = moduleName
+version = jqwikTestscontainersVersion
+
+jar {
+	archiveBaseName.set('jqwik-testcontainers')
+	archiveVersion.set("${jqwikTestscontainersVersion}")
+	manifest {
+		attributes('Automatic-Module-Name': "${moduleName}")
+	}
+}
+
+java {
+	withJavadocJar()
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileTestJava {
+	options.compilerArgs += '-parameters'
+	options.encoding = 'UTF-8'
+}
+
+test {
+	useJUnitPlatform {
+		includeEngines 'jqwik'
+	}
+
+	include '/net/jqwik/spring/**/*Properties.class'
+	include '/net/jqwik/spring/**/*Example.class'
+	include '/net/jqwik/spring/**/*Examples.class'
+	include '/net/jqwik/spring/**/*Test.class'
+	include '/net/jqwik/spring/**/*Tests.class'
+
+	// testLogging.showStandardStreams = true
+}
+
+
+dependencies {
+	api("org.opentest4j:opentest4j:${opentest4jVersion}")
+	api("net.jqwik:jqwik:${jqwikVersion}")
+
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+
+	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
+}
+
+publishing {
+	repositories {
+		maven {
+			// hint: password is in ~/.gradle/gradle.properties
+			def ossrhUsername = project.hasProperty('ossrhUsername') ? project.ossrhUsername : ''
+			def ossrhPassword = project.hasProperty('ossrhPassword') ? project.ossrhPassword : ''
+
+			credentials {
+				username = ossrhUsername
+				password = ossrhPassword
+			}
+
+			// change URLs to point to your repos, e.g. http://my.org/repo
+			def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+			def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+			url = isSnapshotRelease ? snapshotsRepoUrl : releasesRepoUrl
+		}
+	}
+	publications {
+		jqwikTestcontainers(MavenPublication) {
+			groupId = 'net.jqwik'
+			artifactId = 'jqwik-testcontainers'
+			from components.java
+			pom {
+				groupId = 'net.jqwik'
+				name = 'jqwik-testcontainers'
+				description = "Jqwik Testcontainers support module"
+				url = 'https://github.org/jlink/jqwik-testcontainers'
+				licenses {
+					license {
+						name = 'Eclipse Public License - v 2.0'
+						url = 'http://www.eclipse.org/legal/epl-v20.html'
+					}
+				}
+				developers {
+					developer {
+						id = 'gtrefs'
+						name = 'Gregor Trefs'
+						email = 'Gregor.Trefs@gmail.com'
+					}
+					developer {
+						id = 'jlink'
+						name = 'Johannes Link'
+						email = 'business@johanneslink.net'
+					}
+				}
+				scm {
+					connection = 'scm:git:git://github.com/jlink/jqwik-testcontainers.git'
+					developerConnection = 'scm:git:git://github.com/jlink/jqwik-testcontainers.git'
+					url = 'https://github.com/jlink/jqwik-testcontainers'
+				}
+			}
+		}
+	}
+}
+
+signing {
+	if (!isSnapshotRelease) {
+		sign publishing.publications.jqwikTestcontainers
+	}
+}
+
+wrapper {
+	gradleVersion = '6.6.1'
+}
