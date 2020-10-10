@@ -1,61 +1,57 @@
 package net.jqwik.testcontainers;
 
-import net.jqwik.api.Property;
-import net.jqwik.api.lifecycle.AfterProperty;
-import net.jqwik.api.lifecycle.AfterTry;
-import net.jqwik.api.lifecycle.BeforeProperty;
-import net.jqwik.api.lifecycle.BeforeTry;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static net.jqwik.testcontainers.JqwikTestImages.HTTPD_IMAGE;
+import net.jqwik.api.*;
+import net.jqwik.api.lifecycle.*;
+
+import static org.assertj.core.api.Assertions.*;
+
+import static net.jqwik.testcontainers.JqwikTestImages.*;
 
 @Testcontainers
 public class TestcontainersRestartBetweenTrysTest {
 
-    @Container(restartPerTry = true)
-    private GenericContainer<?> restartBetweenTries = new GenericContainer<>(HTTPD_IMAGE.toString())
-        .withExposedPorts(80);
+	private static String restartedBetweenTries = "1x0";
+	private static String beforeTryContainerId = "2x0";
+	@Container(restartPerTry = true)
+	private final GenericContainer<?> restartBetweenTries = new GenericContainer<>(HTTPD_IMAGE.toString())
+			.withExposedPorts(80);
+	@Container(restartPerTry = true)
+	private final TestLifecycleAwareContainerMock containerMock = new TestLifecycleAwareContainerMock();
 
-    @Container(restartPerTry = true)
-    private TestLifecycleAwareContainerMock containerMock = new TestLifecycleAwareContainerMock();
+	@Property(tries = 2)
+	public void container_id_should_always_be_different_between_tries() {
+		assertThat(restartBetweenTries.isRunning()).isTrue();
+		assertThat(restartedBetweenTries).isNotEqualTo(restartBetweenTries.getContainerId());
+		restartedBetweenTries = restartBetweenTries.getContainerId();
+	}
 
-    private static String restartedBetweenTries = "1x0";
+	@BeforeTry
+	public void container_should_be_running_before_try() {
+		assertThat(restartBetweenTries.isRunning()).isTrue();
+		beforeTryContainerId = restartBetweenTries.getContainerId();
+	}
 
-    private static String beforeTryContainerId = "2x0";
+	@AfterTry
+	public void container_should_be_running_after_try() {
+		assertThat(restartBetweenTries.isRunning()).isTrue();
+		assertThat(restartBetweenTries.getContainerId()).isEqualTo(beforeTryContainerId);
+	}
 
-    @Property(tries = 2)
-    public void container_id_should_always_be_different_between_tries(){
-        assertThat(restartBetweenTries.isRunning()).isTrue();
-        assertThat(restartedBetweenTries).isNotEqualTo(restartBetweenTries.getContainerId());
-        this.restartedBetweenTries = restartBetweenTries.getContainerId();
-    }
+	@BeforeProperty
+	@AfterProperty
+	public void container_restarted_between_tries_should_not_be_running() {
+		assertThat(restartBetweenTries.isRunning()).isFalse();
+	}
 
-    @BeforeTry
-    public void container_should_be_running_before_try(){
-        assertThat(restartBetweenTries.isRunning()).isTrue();
-        beforeTryContainerId = restartBetweenTries.getContainerId();
-    }
-
-    @AfterTry
-    public void container_should_be_running_after_try(){
-        assertThat(restartBetweenTries.isRunning()).isTrue();
-        assertThat(restartBetweenTries.getContainerId()).isEqualTo(beforeTryContainerId);
-    }
-
-    @BeforeProperty
-    @AfterProperty
-    public void container_restarted_between_tries_should_not_be_running(){
-        assertThat(restartBetweenTries.isRunning()).isFalse();
-    }
-
-    @AfterProperty
-    public void call_lifecycle_methods_before_and_after_try(){
-        assertThat(containerMock.getLifecycleMethodCalls()).containsExactly(
-            TestLifecycleAwareContainerMock.BEFORE_TEST,
-            TestLifecycleAwareContainerMock.AFTER_TEST,
-            TestLifecycleAwareContainerMock.BEFORE_TEST,
-            TestLifecycleAwareContainerMock.AFTER_TEST
-        );
-    }
+	@AfterProperty
+	public void call_lifecycle_methods_before_and_after_try() {
+		assertThat(containerMock.getLifecycleMethodCalls()).containsExactly(
+				TestLifecycleAwareContainerMock.BEFORE_TEST,
+				TestLifecycleAwareContainerMock.AFTER_TEST,
+				TestLifecycleAwareContainerMock.BEFORE_TEST,
+				TestLifecycleAwareContainerMock.AFTER_TEST
+		);
+	}
 }

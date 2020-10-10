@@ -1,42 +1,44 @@
 package net.jqwik.testcontainers;
 
-import net.jqwik.api.Property;
-import net.jqwik.api.lifecycle.BeforeContainer;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static net.jqwik.testcontainers.JqwikTestImages.HTTPD_IMAGE;
+import net.jqwik.api.*;
+import net.jqwik.api.lifecycle.*;
+
+import static org.assertj.core.api.Assertions.*;
+
+import static net.jqwik.testcontainers.JqwikTestImages.*;
 
 @Testcontainers
 class TestcontainersSharedContainerTests {
 
-    @Container
-    private static final GenericContainer<?> GENERIC_CONTAINER = new GenericContainer<>(HTTPD_IMAGE.toString())
-        .withExposedPorts(80);
+	@Container
+	private static final GenericContainer<?> GENERIC_CONTAINER = new GenericContainer<>(HTTPD_IMAGE.toString())
+			.withExposedPorts(80);
 
-    private static String lastContainerId;
+	private static String lastContainerId;
 
-    @BeforeContainer
-    static void doSomethingWithAContainer() {
-        assertThat(GENERIC_CONTAINER.isRunning()).isTrue();
-    }
+	@BeforeContainer
+	static void doSomethingWithAContainer() {
+		assertThat(GENERIC_CONTAINER.isRunning()).isTrue();
+	}
 
-    @Property
-    void first_test() {
-        if (lastContainerId == null) {
-            lastContainerId = GENERIC_CONTAINER.getContainerId();
-        } else {
-            assertThat(lastContainerId).isEqualTo(GENERIC_CONTAINER.getContainerId());
-        }
-    }
+	@Property
+	void first_test() {
+		if (lastContainerId == null) {
+			lastContainerId = GENERIC_CONTAINER.getContainerId();
+		} else {
+			assertThat(lastContainerId).isEqualTo(GENERIC_CONTAINER.getContainerId());
+		}
+	}
 
-    @Property
-    void second_test() {
-        if (lastContainerId == null) {
-            lastContainerId = GENERIC_CONTAINER.getContainerId();
-        } else {
-            assertThat(lastContainerId).isEqualTo(GENERIC_CONTAINER.getContainerId());
-        }
-    }
+	@Property
+	void second_test() {
+		if (lastContainerId == null) {
+			lastContainerId = GENERIC_CONTAINER.getContainerId();
+		} else {
+			assertThat(lastContainerId).isEqualTo(GENERIC_CONTAINER.getContainerId());
+		}
+	}
 
 }

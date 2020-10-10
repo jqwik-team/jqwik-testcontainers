@@ -1,18 +1,17 @@
 package net.jqwik.testcontainers;
 
-import net.jqwik.api.Disabled;
-import net.jqwik.api.Example;
+import net.jqwik.api.*;
 
 @Disabled
 @Testcontainers
 class WrongAnnotationUsageTests {
 
-    @Container
-    private String notStartable = "foobar";
+	@Container
+	private final String notStartable = "foobar";
 
-    @Example
-    void extension_throws_exception() {
-        assert true;
-    }
+	@Example
+	void extension_throws_exception() {
+		assert true;
+	}
 
 }

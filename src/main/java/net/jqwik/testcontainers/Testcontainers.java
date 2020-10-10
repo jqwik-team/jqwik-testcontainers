@@ -1,13 +1,8 @@
 package net.jqwik.testcontainers;
 
-import net.jqwik.api.lifecycle.AddLifecycleHook;
-import net.jqwik.api.lifecycle.PropagationMode;
+import java.lang.annotation.*;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import net.jqwik.api.lifecycle.*;
 
 /**
  * {@code @Testcontainers} is a Jqwik extension to activate automatic
@@ -61,8 +56,8 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Testcontainers {
 
-    /**
-     * Whether tests should be disabled (rather than failing) when Docker is not available.
-     */
-    boolean disabledWithoutDocker() default false;
+	/**
+	 * Whether tests should be disabled (rather than failing) when Docker is not available.
+	 */
+	boolean disabledWithoutDocker() default false;
 }
