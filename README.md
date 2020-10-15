@@ -13,6 +13,10 @@ This project provides an extension to support [testcontainers](https://www.testc
   - [Supported Testcontainers Versions](#supported-testcontainers-versions)
   - [Supported JUnit Platform Versions](#supported-junit-platform-versions)
 - [Standard Usage](#standard-usage)
+  - [Groups](#groups)
+  - [TestLifecycleAware containers](#testlifecycleaware-containers)
+  - [Singleton containers](#singleton-containers)
+- [Limitations](#limitations)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
