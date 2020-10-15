@@ -71,7 +71,7 @@ test {
 dependencies {
 	api("org.opentest4j:opentest4j:${opentest4jVersion}")
 	api("net.jqwik:jqwik:${jqwikVersion}")
-	api("org.testcontainers:testcontainers:${testcontainersVersion}")
+	compileOnly("org.testcontainers:testcontainers:${testcontainersVersion}")
 
 	testImplementation("org.testcontainers:mysql:${testcontainersVersion}")
 	testImplementation("org.testcontainers:postgresql:${testcontainersVersion}")
