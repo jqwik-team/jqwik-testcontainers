@@ -39,9 +39,11 @@ dependencies {
 }
 ```
 
-[comment]: # You can look at a
-[comment]: # [sample project](https://github.com/jlink/jqwik-samples/tree/master/jqwik-testcontainers-gradle)
-[comment]: # using jqwik, Testcontainers and Gradle.
+<!-- 
+You can look at a
+[sample project](https://github.com/jlink/jqwik-samples/tree/master/jqwik-testcontainers-gradle)
+using jqwik, Testcontainers and Gradle.
+-->
 
 ### Maven
 
