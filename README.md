@@ -30,14 +30,18 @@ and add the following dependency to your `build.gradle` file:
 
 ```
 dependencies {
-  testImplementation("org.testcontainers:testcontainers:1.4.3")
+  testImplementation("org.testcontainers:testcontainers:1.14.3")
+
+  // On a Mac
+  // testImplementation("org.testcontainers:testcontainers:1.15.0-rc2")
+
   testImplementation("net.jqwik:jqwik-testcontainers:0.5.0")
 }
 ```
 
-You can look at a
-[sample project](https://github.com/jlink/jqwik-samples/tree/master/jqwik-testcontainers-gradle)
- using jqwik, Testcontainers and Gradle.
+[comment]: # You can look at a
+[comment]: # [sample project](https://github.com/jlink/jqwik-samples/tree/master/jqwik-testcontainers-gradle)
+[comment]: # using jqwik, Testcontainers and Gradle.
 
 ### Maven
 
@@ -49,7 +53,7 @@ and add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>org.testcontainers</groupId>
   <artifactId>testcontainers</artifactId>
-  <version>1.4.3</version>
+  <version>1.14.3</version>
   <scope>test</scope>
 </dependency>
 <dependency>
