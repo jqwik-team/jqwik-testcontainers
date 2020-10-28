@@ -32,7 +32,7 @@ and add the following dependency to your `build.gradle` file:
 dependencies {
   testImplementation("org.testcontainers:testcontainers:1.14.3")
 
-  // On a Mac
+  // On a Mac:
   // testImplementation("org.testcontainers:testcontainers:1.15.0-rc2")
 
   testImplementation("net.jqwik:jqwik-testcontainers:0.5.0")
@@ -68,7 +68,8 @@ and add the following dependency to your `pom.xml` file:
 
 You have to provide your own version of testcontainers through Gradle or Maven. The *jqwik-testcontainers* library 
 has been tested with version:
-* 1.4.3
+* 1.14.3 (not on Mac)
+* 1.15.0-rc2 (on Mac)
 
 Please report any compatibility issues you stumble upon.
 
