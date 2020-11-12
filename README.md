@@ -234,7 +234,7 @@ The mock container captures lifecycle method calls. After two tries of property 
 
 ### Singleton containers
 
-Note that the [singleton container pattern](manual_lifecycle_control.md#singleton-containers) is also an option when
+Note that the [singleton container pattern](https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control#singleton-containers) is also an option when
 using JUnit 5.
 
 ## Limitations
