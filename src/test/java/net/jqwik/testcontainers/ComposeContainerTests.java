@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 class ComposeContainerTests {
 
 	@Container
-	private final DockerComposeContainer composeContainer = new DockerComposeContainer(
+	private final DockerComposeContainer<?> composeContainer = new DockerComposeContainer<>(
 			new File("src/test/resources/docker-compose.yml"))
 			.withExposedService("whoami_1", 80, Wait.forHttp("/"));
 
