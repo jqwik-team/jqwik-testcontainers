@@ -15,7 +15,7 @@ import static net.jqwik.testcontainers.JqwikTestImages.*;
 class PostgresContainerTests {
 
 	@Container
-	private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>(POSTGRES_IMAGE.toString())
+	private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>(POSTGRES_IMAGE)
 			.withDatabaseName("foo")
 			.withUsername("foo")
 			.withPassword("secret");

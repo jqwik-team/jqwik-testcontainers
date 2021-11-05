@@ -1,13 +1,14 @@
 package net.jqwik.testcontainers.inheritance;
 
 import org.testcontainers.containers.*;
-import org.testcontainers.utility.*;
 import redis.clients.jedis.*;
+
+import static net.jqwik.testcontainers.JqwikTestImages.*;
 
 public class RedisContainer extends GenericContainer<RedisContainer> {
 
 	public RedisContainer() {
-		super(new DockerImageName("redis:3.2.11").toString());
+		super(REDIS_IMAGE);
 		withExposedPorts(6379);
 	}
 
