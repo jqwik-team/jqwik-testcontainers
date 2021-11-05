@@ -30,12 +30,8 @@ and add the following dependency to your `build.gradle` file:
 
 ```
 dependencies {
-  testImplementation("org.testcontainers:testcontainers:1.14.3")
-
-  // On a Mac:
-  // testImplementation("org.testcontainers:testcontainers:1.15.0-rc2")
-
-  testImplementation("net.jqwik:jqwik-testcontainers:0.5.0")
+  testImplementation("org.testcontainers:testcontainers:1.16.2")
+  testImplementation("net.jqwik:jqwik-testcontainers:0.5.1-SNAPSHOT")
 }
 ```
 
@@ -55,13 +51,13 @@ and add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>org.testcontainers</groupId>
   <artifactId>testcontainers</artifactId>
-  <version>1.14.3</version>
+  <version>1.16.2</version>
   <scope>test</scope>
 </dependency>
 <dependency>
   <groupId>net.jqwik</groupId>
   <artifactId>jqwik-testcontainers</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.1-SNAPSHOT</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -72,6 +68,7 @@ You have to provide your own version of testcontainers through Gradle or Maven. 
 has been tested with version:
 * 1.14.3 (not on Mac)
 * 1.15.0-rc2 (on Mac)
+* 1.16.2
 
 Please report any compatibility issues you stumble upon.
 
