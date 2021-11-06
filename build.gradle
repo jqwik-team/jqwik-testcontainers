@@ -16,13 +16,13 @@ ext {
 	mockitoVersion = '3.3.3'
 	jqwikVersion = '1.5.6'
 	testcontainersVersion = '1.16.2'
-	jqwikTestscontainersVersion = '0.5.1-SNAPSHOT'
+	jqwikTestcontainersVersion = '0.5.1-SNAPSHOT'
 	hikariCpVersion =  '3.4.5'
 	jedisClientVersion = '3.3.0'
 	httpClientVersion = '4.5.12'
 	postgreSqlClientVersion = '42.2.16'
 	mySqlClientVersion = '8.0.21'
-	isSnapshotRelease = isSnapshotRelease(jqwikTestscontainersVersion)
+	isSnapshotRelease = isSnapshotRelease(jqwikTestcontainersVersion)
 }
 
 repositories {
@@ -31,11 +31,11 @@ repositories {
 }
 
 group = moduleName
-version = jqwikTestscontainersVersion
+version = jqwikTestcontainersVersion
 
 jar {
 	archiveBaseName.set('jqwik-testcontainers')
-	archiveVersion.set("${jqwikTestscontainersVersion}")
+	archiveVersion.set("${jqwikTestcontainersVersion}")
 	manifest {
 		attributes('Automatic-Module-Name': "${moduleName}")
 	}
@@ -81,8 +81,8 @@ dependencies {
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
-	testRuntime "org.postgresql:postgresql:${postgreSqlClientVersion}"
-	testRuntime "mysql:mysql-connector-java:${mySqlClientVersion}"
+	testRuntimeOnly("org.postgresql:postgresql:${postgreSqlClientVersion}")
+	testRuntimeOnly("mysql:mysql-connector-java:${mySqlClientVersion}")
 }
 
 publishing {
@@ -148,5 +148,5 @@ signing {
 }
 
 wrapper {
-	gradleVersion = '6.6.1'
+	gradleVersion = '7.2'
 }
