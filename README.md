@@ -31,11 +31,11 @@ and add the following dependency to your `build.gradle` file:
 ```
 dependencies {
   testImplementation("org.testcontainers:testcontainers:1.16.2")
-  testImplementation("net.jqwik:jqwik-testcontainers:0.5.1-SNAPSHOT")
+  testImplementation("net.jqwik:jqwik-testcontainers:0.5.1")
 }
 ```
 
-<!-- 
+<!--
 You can look at a
 [sample project](https://github.com/jlink/jqwik-samples/tree/master/jqwik-testcontainers-gradle)
 using jqwik, Testcontainers and Gradle.
@@ -57,37 +57,37 @@ and add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>net.jqwik</groupId>
   <artifactId>jqwik-testcontainers</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  <version>0.5.1</version>
   <scope>test</scope>
 </dependency>
 ```
 
 ### Supported Testcontainers Versions
 
-You have to provide your own version of testcontainers through Gradle or Maven. The *jqwik-testcontainers* library 
+You have to provide your own version of testcontainers through Gradle or Maven. The *jqwik-testcontainers* library
 has been tested with version:
 * 1.14.3 (not on Mac)
-* 1.15.0-rc2 (on Mac)
+* 1.15.3 (on Mac)
 * 1.16.2
 
 Please report any compatibility issues you stumble upon.
 
 ### Supported JUnit Platform Versions
 
-You need at least version `1.7.0` of the JUnit platform - otherwise
+You need at least version `1.8.1` of the JUnit platform - otherwise
 strange things _could_ happen.
 
 ## Standard Usage
-The `@Testcontainers` annotation is the entry point of this extension. If the annotation is present on your class, jqwik 
-will find all fields annotated with `@Container`. If any of these fields is not `Startable`, the tests won't be run 
-resulting in a failure. Shared containers are static fields which are started once before all properties and examples 
-and stopped after all properties and examples. Restarted containers are instance fields which are started and stopped 
-for every property or example. Restarted try-containers are instance fields with a true `restartPerTry` annotation value. 
-They are started and stopped for every property- or example-try. 
+The `@Testcontainers` annotation is the entry point of this extension. If the annotation is present on your class, jqwik
+will find all fields annotated with `@Container`. If any of these fields is not `Startable`, the tests won't be run
+resulting in a failure. Shared containers are static fields which are started once before all properties and examples
+and stopped after all properties and examples. Restarted containers are instance fields which are started and stopped
+for every property or example. Restarted try-containers are instance fields with a true `restartPerTry` annotation value.
+They are started and stopped for every property- or example-try.
 
-jqwik starts shared containers before calling `@BeforeContainer` annotated methods and stops them after calling 
-`@AfterContainer` annotated methods. Similar, restarted containers are started before calling `@BeforeProperty`and 
-stopped after calling `@AfterProperty`. Finally, restarted try-containers are started before calling `@BeforeTry` and 
+jqwik starts shared containers before calling `@BeforeContainer` annotated methods and stops them after calling
+`@AfterContainer` annotated methods. Similar, restarted containers are started before calling `@BeforeProperty`and
+stopped after calling `@AfterProperty`. Finally, restarted try-containers are started before calling `@BeforeTry` and
 stopped after calling `@AfterTry`.
 
 ```java
@@ -142,14 +142,14 @@ public class RedisBackedCacheIntTest {
 }
 ```
 
-The test above uses `@Testcontainers` with two redis `@Container`s. `sharedContainer` will run for the whole test while 
+The test above uses `@Testcontainers` with two redis `@Container`s. `sharedContainer` will run for the whole test while
 `redis` will be restarted between the `@Example` and the `@Property`. The assumption about redis is, that whatever key
 or value is used, the value should be able to be retrieved again by the key. jqwik generates keys and values and tries
 to falsify this assumption. By default, the property will be tried 1000 times.
 
 ### Groups
 
-A `@Group` is a means to improve the organization and maintainability of your tests. It may contain own restarted 
+A `@Group` is a means to improve the organization and maintainability of your tests. It may contain own restarted
 containers which will be restarted for properties and examples within a group but are not shared with subgroups.
 
 ```java
@@ -160,7 +160,7 @@ public class GroupedContainersTest {
         @Container
         private final GenericContainer<?> groupedContainer = new GenericContainer<>(HTTPD_IMAGE)
             .withExposedPorts(80);
-    
+
         @Group
         public class Subgroup {
             @Example
@@ -199,13 +199,13 @@ public class GroupedContainersTest {
 
 ### TestLifecycleAware containers
 
-Depending on the type of the `TestLifeCycleAware` container, callbacks `beforeTest` and `afterTest` will be called for 
+Depending on the type of the `TestLifeCycleAware` container, callbacks `beforeTest` and `afterTest` will be called for
 every try, property/example and/or test run. Consider the following example:
 
 ```java
 @Testcontainers
 public class TestcontainersRestartBetweenTrysTest {
-	
+
 	@Container(restartPerTry = true)
 	private final TestLifecycleAwareContainerMock containerMock = new TestLifecycleAwareContainerMock();
 
@@ -226,7 +226,7 @@ public class TestcontainersRestartBetweenTrysTest {
 }
 ```
 
-The mock container captures lifecycle method calls. After two tries of property `some_property`, there have been four 
+The mock container captures lifecycle method calls. After two tries of property `some_property`, there have been four
  calls in total and two calls each to `beforeTest` and `afterTest`.
 
 ### Singleton containers
@@ -240,4 +240,3 @@ Lifecycle hooks use proximity to determine when a hook should be run. Proximity,
 defined over it. This means, a before property hook with a proximity of 1 will be executed after a before property hook
 with a proximity of 2. However, these values are hard coded and there might be unwanted effects when there are other
 hooks and the order of execution is wrong.
-

@@ -16,7 +16,7 @@ ext {
 	mockitoVersion = '3.3.3'
 	jqwikVersion = '1.5.6'
 	testcontainersVersion = '1.16.2'
-	jqwikTestcontainersVersion = '0.5.1-SNAPSHOT'
+	jqwikTestcontainersVersion = '0.5.1'
 	hikariCpVersion =  '3.4.5'
 	jedisClientVersion = '3.3.0'
 	httpClientVersion = '4.5.12'
