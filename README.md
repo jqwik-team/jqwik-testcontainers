@@ -86,9 +86,11 @@ for every property or example. Restarted try-containers are instance fields with
 They are started and stopped for every property- or example-try.
 
 jqwik starts shared containers before calling `@BeforeContainer` annotated methods and stops them after calling
-`@AfterContainer` annotated methods. Similar, restarted containers are started before calling `@BeforeProperty`and
-stopped after calling `@AfterProperty`. Finally, restarted try-containers are started before calling `@BeforeTry` and
-stopped after calling `@AfterTry`.
+`@AfterContainer` annotated methods. 
+Mind that the word _container_ in these annotations refers to the containing test class, not to a Docker container.
+
+Similar, restarted containers are started before calling `@BeforeProperty`and stopped after calling `@AfterProperty`. 
+Finally, restarted try-containers are started before calling `@BeforeTry` and stopped after calling `@AfterTry`.
 
 ```java
 import net.jqwik.api.Example;
@@ -184,7 +186,7 @@ public class GroupedContainersTest {
         .withExposedPorts(80);
 
     @Group
-    public class GroupAccssingSharedContainer {
+    public class GroupAccessingSharedContainer {
 
         @Group
         public class Subgroup {
