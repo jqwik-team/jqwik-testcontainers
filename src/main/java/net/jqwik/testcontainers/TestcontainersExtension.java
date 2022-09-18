@@ -55,7 +55,7 @@ class TestcontainersExtension implements AroundTryHook, AroundPropertyHook, Arou
 	public void beforeContainer(ContainerLifecycleContext context) {
 		Class<?> testClass = context.optionalContainerClass()
 									.orElseThrow(() -> new IllegalStateException("TestcontainersExtension is only supported for classes."));
-		Store<List<Startable>> store = getOrCreateContainerClosingStore(IDENTIFIER, Lifespan.RUN);
+		Store<ClosableStartables> store = getOrCreateContainerClosingStore(IDENTIFIER, Lifespan.RUN);
 
 		List<TestLifecycleAware> lifecycleAwareContainers = startContainersAndFindLifeCycleAwareOnes(store, findSharedContainers(testClass));
 
@@ -79,7 +79,7 @@ class TestcontainersExtension implements AroundTryHook, AroundPropertyHook, Arou
 	@Override
 	public PropertyExecutionResult aroundProperty(PropertyLifecycleContext context, PropertyExecutor property) {
 		Object testInstance = context.testInstance();
-		Store<List<Startable>> store = getOrCreateContainerClosingStore(property.hashCode(), Lifespan.PROPERTY);
+		Store<ClosableStartables> store = getOrCreateContainerClosingStore(property.hashCode(), Lifespan.PROPERTY);
 
 		List<TestLifecycleAware> lifecycleAwareContainers = startContainersAndFindLifeCycleAwareOnes(store, findRestartContainers(testInstance));
 
@@ -99,7 +99,7 @@ class TestcontainersExtension implements AroundTryHook, AroundPropertyHook, Arou
 	@Override
 	public TryExecutionResult aroundTry(TryLifecycleContext context, TryExecutor aTry, List<Object> parameters) {
 		Object testInstance = context.testInstance();
-		Store<List<Startable>> store = getOrCreateContainerClosingStore(aTry.hashCode(), Lifespan.TRY);
+		Store<ClosableStartables> store = getOrCreateContainerClosingStore(aTry.hashCode(), Lifespan.TRY);
 
 		List<TestLifecycleAware> lifecycleAwareContainers = startContainersAndFindLifeCycleAwareOnes(store, findRestartContainersPerTry(testInstance));
 
@@ -116,19 +116,16 @@ class TestcontainersExtension implements AroundTryHook, AroundPropertyHook, Arou
 		return -11; // Run before BeforeTry and after AfterTry
 	}
 
-	private Store<List<Startable>> getOrCreateContainerClosingStore(Object identifier, Lifespan lifespan) {
-		Store<List<Startable>> store = Store.getOrCreate(identifier, lifespan, ArrayList::new);
-		store.onClose(startables -> startables.forEach(Startable::close));
-		return store;
+	private Store<ClosableStartables> getOrCreateContainerClosingStore(Object identifier, Lifespan lifespan) {
+		return Store.getOrCreate(identifier, lifespan, ClosableStartables::empty);
 	}
 
-	private List<TestLifecycleAware> startContainersAndFindLifeCycleAwareOnes(Store<List<Startable>> store, Stream<Startable> containers) {
+	private List<TestLifecycleAware> startContainersAndFindLifeCycleAwareOnes(Store<ClosableStartables> store, Stream<Startable> containers) {
 		return containers
-				.peek(startable -> store.update(startables -> {
-					List<Startable> update = new ArrayList<>(startables);
+				.peek(startable -> store.update(closableStartables -> {
 					startable.start();
-					update.add(startable);
-					return update;
+					closableStartables.add(startable);
+					return closableStartables;
 				}))
 				.filter(this::isTestLifecycleAware)
 				.map(startable -> (TestLifecycleAware) startable)
@@ -234,5 +231,32 @@ class TestcontainersExtension implements AroundTryHook, AroundPropertyHook, Arou
 		)
 							  .stream()
 							  .map(f -> getContainerInstance(testInstance, f));
+	}
+
+	private static class ClosableStartables implements Store.CloseOnReset {
+
+		private final List<Startable> startables;
+
+		private ClosableStartables(List<Startable> startables) {
+			this.startables = startables;
+		}
+
+		private static ClosableStartables empty(){
+			return of(new ArrayList<>());
+		}
+
+		private static ClosableStartables of(List<Startable> startables){
+			return new ClosableStartables(startables);
+		}
+
+		public void add(Startable startable){
+			startables.add(startable);
+		}
+
+		@Override
+		public void close() {
+			startables.forEach(Startable::close);
+		}
+
 	}
 }

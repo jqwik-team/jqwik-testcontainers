@@ -14,7 +14,7 @@ ext {
 	opentest4jVersion = '1.2.0'
 	assertJVersion = '3.15.0'
 	mockitoVersion = '3.3.3'
-	jqwikVersion = '1.5.6'
+	jqwikVersion = '1.6.5'
 	testcontainersVersion = '1.16.2'
 	jqwikTestcontainersVersion = '0.5.2-SNAPSHOT'
 	hikariCpVersion =  '3.4.5'
