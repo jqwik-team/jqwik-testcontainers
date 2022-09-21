@@ -31,7 +31,7 @@ and add the following dependency to your `build.gradle` file:
 ```
 dependencies {
   testImplementation("org.testcontainers:testcontainers:1.16.2")
-  testImplementation("net.jqwik:jqwik-testcontainers:0.5.1")
+  testImplementation("net.jqwik:jqwik-testcontainers:0.5.2")
 }
 ```
 
@@ -57,7 +57,7 @@ and add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>net.jqwik</groupId>
   <artifactId>jqwik-testcontainers</artifactId>
-  <version>0.5.1</version>
+  <version>0.5.2</version>
   <scope>test</scope>
 </dependency>
 ```

@@ -16,7 +16,7 @@ ext {
 	mockitoVersion = '3.3.3'
 	jqwikVersion = '1.6.5'
 	testcontainersVersion = '1.16.2'
-	jqwikTestcontainersVersion = '0.5.2-SNAPSHOT'
+	jqwikTestcontainersVersion = '0.5.2'
 	hikariCpVersion =  '3.4.5'
 	jedisClientVersion = '3.3.0'
 	httpClientVersion = '4.5.12'
@@ -98,8 +98,8 @@ publishing {
 			}
 
 			// change URLs to point to your repos, e.g. http://my.org/repo
-			def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-			def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+			def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+			def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 			url = isSnapshotRelease ? snapshotsRepoUrl : releasesRepoUrl
 		}
 	}
